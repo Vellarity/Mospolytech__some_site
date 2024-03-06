@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#app::before{
+  content: 10;
+  font-size: 1000px;
+  color: #00ffff;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*:focus-visible{
+  @apply outline-gray-500
+}
+
+.color_checker{
+  border: 1px solid black;
+  border-radius: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 1px;
+}
+
+.color_checker:checked {
+  appearance: auto;
+  clip-path: circle(50% at 50% 50%);
+  border: 1px solid black;
+  border-radius: 100%;
+  padding: 1px;
+}
+
+.basic_input {
+  @apply flex-1 h-10 p-1 rounded-xl border-2 border-gray-300 focus-visible:outline-gray-500 delay-150
+}
+
+.basic_button {
+  @apply bg-gray-300 p-2 rounded-lg
+}
+
+input[type="checkbox"]:checked{
+  background: black !important;
+  color: black;
+}
