@@ -1,18 +1,17 @@
 <script setup>
 import { ref } from 'vue';
+import { localRoute } from "../../helper/constants"
 
 defineProps({
     shopItem:Object
 })
-
-let sizes = ["XS", "S", "M", "L", "XL", "XXL"]
 
 </script>
 
 <template>
     <div class="bg-gray-100/75 backdrop-blur-sm p-2 rounded-xl flex flex-col gap-1 cursor-pointer">
         <div class="bg-white rounded-lg w-full h-40">
-            <img v-if="shopItem.image" alt="Нет изображения" class="h-40 w-full object-contain" :src="shopItem.image" />
+            <img v-if="shopItem.image" alt="Нет изображения" class="h-40 w-full object-contain" :src="`${localRoute}/${shopItem.image}`" />
             <div v-else class="flex items-center h-full justify-center">
                 Нет изображения
             </div>
