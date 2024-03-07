@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { localRoute } from "../../helper/constants"
+import { RouterLink } from 'vue-router';
 
 defineProps({
     shopItem:Object
@@ -9,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-    <div class="bg-gray-100/75 backdrop-blur-sm p-2 rounded-xl flex flex-col gap-1 cursor-pointer">
+    <RouterLink class="bg-gray-100/75 backdrop-blur-sm p-2 rounded-xl flex flex-col gap-1 cursor-pointer" :to="`/shop/${shopItem.id}`">
         <div class="bg-white rounded-lg w-full h-40">
             <img v-if="shopItem.image" alt="Нет изображения" class="h-40 w-full object-contain" :src="`${localRoute}/${shopItem.image}`" />
             <div v-else class="flex items-center h-full justify-center">
@@ -21,7 +22,7 @@ defineProps({
             <div class="text-sm">Размеры</div>
             <div class="flex gap-1">
                 <template v-for="size in shopItem.size">
-                    <div 
+                    <div
                         class="h-10 w-10 rounded-lg bg-gray-200 flex justify-center items-center font-medium text-sm"
                     >
                         {{size.name}}
@@ -37,5 +38,5 @@ defineProps({
                 {{shopItem.cost}} ₽
             </div>
         </div>
-    </div>
+    </RouterLink>
 </template>

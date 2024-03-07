@@ -1,6 +1,6 @@
 from rest_framework import  serializers
 
-from api.models import Wear, WearSize
+from api.models import Wear, WearComment, WearSize
 
 
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
@@ -40,3 +40,8 @@ class WearSerializer(DynamicFieldsModelSerializer):
     @staticmethod
     def get_image_url(obj):
         return obj.image.url if obj.image else None 
+
+class WearCommentSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = WearComment
+        fields = '__all__'

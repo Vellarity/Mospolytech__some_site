@@ -23,7 +23,7 @@ export const useShopItemsStore = defineStore('shopItems', {
                     else urlParams.append(name, param)
                 }
                 console.log(urlParams.toString())
-                let req = await fetch(`${localRoute}api/shop_list?${urlParams}`)
+                let req = await fetch(`${localRoute}api/wears/shop_list?${urlParams}`)
                 let res = await req.json()
                 this.itemsList = res.results
                 this.pagination.nextPageLink = res.links.next

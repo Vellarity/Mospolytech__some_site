@@ -55,8 +55,8 @@ class WearType(models.Model):
 
 
 class WearComment(models.Model):
-    wear_id = models.ForeignKey("Wear", on_delete=models.CASCADE)
-    user_id = models.ForeignKey("Profile", on_delete=models.CASCADE)
+    wear = models.ForeignKey("Wear", on_delete=models.CASCADE)
+    user = models.ForeignKey("Profile", on_delete=models.CASCADE, null=True)
     comment = models.TextField(blank=True)
     rate = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], default=0, null=False)
 

@@ -1,10 +1,13 @@
-import types
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-from api.models import Wear, WearType
-from api.serializers import WearSerializer
+from api.models import Wear, WearComment, WearType
+from api.serializers import WearCommentSerializer, WearSerializer
 from django.db.models import Q, Min, Max
-from rest_framework.pagination import PageNumberPagination
+
+from rest_framework.decorators import action
+from api.helper import CustomPagination
+from rest_framework import viewsets
+from rest_framework.response import Response
 
 #!!! SOF CSRF THEME
 
@@ -65,7 +68,6 @@ def whoami_view(request):
 
 # Create your views here.
 
-from api.helper import CustomPagination
 
 @api_view(['GET'])
 def shop_list(request):
@@ -114,3 +116,52 @@ def filters_costs(request):
     except Exception as e:
         raise
     return JsonResponse({"error":False, "data": {"min":min, "max":max}})
+
+class WearViewSet(viewsets.ModelViewSet):
+    queryset = Wear.objects.all()
+    serializer_class = WearSerializer
+
+    @action(methods=["get"], detail=False)
+    def shop_list(self, request):
+        try:
+            data=request.query_params
+            paginator = CustomPagination()
+
+            maxCost_Q = Q()
+            colors_Q = Q()
+            types_Q = Q()
+            if data.get("maxCost", '0') != '0':
+                maxCost_Q = Q(cost__lte=data["maxCost"])
+            if len(data.getlist("colors", [])) != 0:
+                colors_Q = Q(color__in=data.getlist("colors"))
+            if len(data.getlist("types", [])) != 0:
+                types_Q = Q(type__id__in=data.getlist("types")) 
+            res = Wear.objects.prefetch_related(
+                'size'
+            ).filter(
+                colors_Q
+                & types_Q
+                & Q(cost__gte=data.get("minCost","0")) 
+                & maxCost_Q
+                & Q(name__icontains=data.get("searchParam",""))
+            )
+
+            res = paginator.paginate_queryset(res, request)
+            res = WearSerializer(res, many=True).data
+        except Exception as e:
+            raise(e)
+        return paginator.get_paginated_response(res)
+    
+
+class WearCommentViewSet(viewsets.ModelViewSet):
+    serializer_class=WearCommentSerializer
+
+    def get_queryset(self):
+        queryset = WearComment.objects.all()
+        user_id = self.request.query_params.get("user_id")
+        wear_id = self.request.query_params.get("wear_id")
+        if user_id is not None:
+            queryset = queryset.filter(user=user_id)
+        if wear_id is not None:
+            queryset = queryset.filter(wear=wear_id)
+        return queryset
