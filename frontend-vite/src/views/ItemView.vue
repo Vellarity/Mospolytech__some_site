@@ -13,7 +13,7 @@ itemStore.getComments(itemID)
 </script>
 
 <template>
-    <div class="container">
+    <div class="container m-auto">
         <InfoBlock :info="itemStore.info"/>
     </div>
 </template>

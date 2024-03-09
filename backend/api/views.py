@@ -118,7 +118,7 @@ def filters_costs(request):
     return JsonResponse({"error":False, "data": {"min":min, "max":max}})
 
 class WearViewSet(viewsets.ModelViewSet):
-    queryset = Wear.objects.all()
+    queryset = Wear.objects.select_related("type")
     serializer_class = WearSerializer
 
     @action(methods=["get"], detail=False)

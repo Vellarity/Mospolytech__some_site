@@ -32,10 +32,16 @@ class WearSizeSerializer(DynamicFieldsModelSerializer):
 class WearSerializer(DynamicFieldsModelSerializer):
     image_url = serializers.SerializerMethodField()
     size = WearSizeSerializer(read_only=True, many=True)
+    color = serializers.SerializerMethodField()
+    type = serializers.StringRelatedField()
 
     class Meta:
         model = Wear
         fields = '__all__'
+
+    @staticmethod
+    def get_color(obj):
+        return Wear.COLORS[obj.color]
 
     @staticmethod
     def get_image_url(obj):

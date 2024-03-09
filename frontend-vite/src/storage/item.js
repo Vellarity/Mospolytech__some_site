@@ -7,10 +7,12 @@ export const useItemStore = defineStore('item', {
         return {
             info:{
                 name:String,
-                sizes:Array,
+                size:Array,
                 color:String,
                 cost:Number,
                 type:String,
+                image:String,
+                infoText:String,
             },
             comments:Array
         }
@@ -21,10 +23,12 @@ export const useItemStore = defineStore('item', {
                 let req = await fetch(`${localRoute}api/wears/${itemID}`)
                 let res = await req.json()
                 this.info.name = res.name
-                this.info.sizes = res.sizes
+                this.info.size = res.size
                 this.info.color = res.color
                 this.info.cost = res.cost
                 this.info.type = res.type
+                this.info.image = res.image_url
+                this.info.infoText = res.info_text
             } catch (error) {
                 console.error(error)
             }

@@ -45,6 +45,7 @@ class Wear(models.Model):
     size = models.ManyToManyField("WearSize") # TextField(choises=WEARSIZES, default = "XXS")
     image = models.ImageField(upload_to="wear_images", null=True)
     color = models.TextField(choices=COLORS, default="BLACK")
+    info_text = models.TextField(null=True, blank=True)
     history = HistoricalRecords()
 
 class WearType(models.Model):
