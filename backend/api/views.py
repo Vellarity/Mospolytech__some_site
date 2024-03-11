@@ -165,3 +165,6 @@ class WearCommentViewSet(viewsets.ModelViewSet):
         if wear_id is not None:
             queryset = queryset.filter(wear=wear_id)
         return queryset
+    
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)

@@ -1,3 +1,5 @@
+import datetime
+from email.policy import default
 from django.db import models
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -58,7 +60,9 @@ class WearType(models.Model):
 class WearComment(models.Model):
     wear = models.ForeignKey("Wear", on_delete=models.CASCADE)
     user = models.ForeignKey("Profile", on_delete=models.CASCADE, null=True)
+    author = models.TextField(blank=True, null=True)
     comment = models.TextField(blank=True)
+    date = models.DateField(default=datetime.date.today())
     rate = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], default=0, null=False)
 
 class WearSize(models.Model):

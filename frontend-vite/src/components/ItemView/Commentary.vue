@@ -1,10 +1,17 @@
 <script setup>
+import { computed } from 'vue';
+import Rating from '../atoms/Rating.vue';
 
-defineProps({
+
+const props = defineProps({
     user:Object,
     rate:Number,
-    comment:String
+    comment:String,
+    author:String,
+    date:String
 })
+
+const parsedDate = computed(() => {return new Date(props.date).toLocaleDateString()})
 
 </script>
 
@@ -13,18 +20,20 @@ defineProps({
         <div class="flex gap-1">
             <span class="font-medium text-base">От:</span>
             <div v-if="user">{{user.name}} {{user.fio}}</div>
-            <div v-else class="font-medium text-base">Неавторизованный пользователь</div>
+            <div v-else class="font-medium text-base">Неавторизованный пользователь ({{author}})</div>
+            <div class="ml-auto text-base font-medium">{{parsedDate}}</div>
         </div>
         <div class="flex gap-1 items-center">
             <span class="font-medium text-base">Оценка:</span>
-            <template v-for="i of 5">
+            <Rating :active="false" :initial-rating="rate"/>
+            <!-- <template v-for="i of 5">
                 <span v-if="i <= rate" class="h-4 w-3 bg-gray-800 rounded-sm" />
                 <span v-else class="h-4 w-3 bg-gray-200 border border-gray-800 rounded-sm" />
-            </template>
+            </template> -->
         </div>
         <div class="flex gap-1">
             <span class="font-medium text-base">Отзыв:</span>
-            <p>{{comment}}</p>
+            <p class="font-normal text-base">{{comment}}</p>
         </div>
     </div>
 </template>

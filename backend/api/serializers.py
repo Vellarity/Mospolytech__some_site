@@ -42,12 +42,14 @@ class WearSerializer(DynamicFieldsModelSerializer):
     @staticmethod
     def get_color(obj):
         return Wear.COLORS[obj.color]
-
+ 
     @staticmethod
     def get_image_url(obj):
         return obj.image.url if obj.image else None 
 
 class WearCommentSerializer(DynamicFieldsModelSerializer):
+    #wear = serializers.SlugRelatedField("id", read_only=True)
+
     class Meta:
         model = WearComment
         fields = '__all__'

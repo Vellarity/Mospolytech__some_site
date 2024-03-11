@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework.routers import DefaultRouter
 
 from . import views
 
@@ -10,9 +11,14 @@ wear = views.WearViewSet.as_view({
     'get':'retrieve'
 })
 
-comment_list = views.WearCommentViewSet.as_view({
-    'get':'list'
+comments = views.WearCommentViewSet.as_view({
+    'get':'list',
+    'post':'create'
 })
+
+
+router = DefaultRouter()
+router.register(r'comments', views.WearCommentViewSet, basename='comment')
 
 urlpatterns = [
     #path("shop_list", views.shop_list, name="shop_list"),
@@ -22,5 +28,5 @@ urlpatterns = [
     path("filters/types", views.filters_types),
     path("filters/costs", views.filters_costs),
 
-    path("comments", comment_list, name="comments_list")
-]
+    #path("comments", comments, name="comments_list")
+] + router.urls
