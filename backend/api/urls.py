@@ -28,5 +28,11 @@ urlpatterns = [
     path("filters/types", views.filters_types),
     path("filters/costs", views.filters_costs),
 
+    path("auth/get_csrf/", views.get_csrf, name="get_csrf"),
+    path("auth/session/", views.session_view, name="session_view"),
+    path("auth/login/", views.login_view, name="login_view"),
+    path("auth/logout/", views.logout_view, name="logout_view"),
+    path("auth/whoami/", views.whoami_view, name="whoami_view"),
+
     #path("comments", comments, name="comments_list")
 ] + router.urls

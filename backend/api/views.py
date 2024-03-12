@@ -19,9 +19,9 @@ from django.views.decorators.http import require_POST
 
 def get_csrf(request):
     response = JsonResponse({'detail': 'CSRF cookie set'})
+    response['Access-Control-Expose-Headers'] = "X-CSRFToken"
     response['X-CSRFToken'] = get_token(request)
     return response
-
 
 @require_POST
 def login_view(request):
@@ -39,7 +39,6 @@ def login_view(request):
 
     login(request, user)
     return JsonResponse({'detail': 'Successfully logged in.'})
-
 
 def logout_view(request):
     if not request.user.is_authenticated:
@@ -151,7 +150,6 @@ class WearViewSet(viewsets.ModelViewSet):
         except Exception as e:
             raise(e)
         return paginator.get_paginated_response(res)
-    
 
 class WearCommentViewSet(viewsets.ModelViewSet):
     serializer_class=WearCommentSerializer
