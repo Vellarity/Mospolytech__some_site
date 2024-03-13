@@ -1,10 +1,11 @@
 import {defineStore} from "pinia"
 import { localRoute } from "../helper/constants";
+import Cookies from "js-cookie"
 
 export const useSessionStore = defineStore('session', {
     state:() => {
         return {
-            csrf: localStorage.getItem("csrftoken") ?? "",
+            csrf: "",
             username: "",
             password: "",
             error: "",
@@ -25,7 +26,9 @@ export const useSessionStore = defineStore('session', {
         },
         
         async getSession() {
-            fetch(`${localRoute}api/auth/session/`,)
+            fetch(`${localRoute}api/auth/session/`,{
+               
+            })
                 .then((res) => res.json())
                 .then((data) => {
                     console.log(data);

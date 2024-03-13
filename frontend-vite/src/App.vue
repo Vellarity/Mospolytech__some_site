@@ -14,7 +14,7 @@ console.log(sessionStore.csrf)
 
 <template>
   <NavPanel />
-  <div class="main">
+  <div class="main flex flex-col flex-1">
     <RouterView />
   </div>
 </template>

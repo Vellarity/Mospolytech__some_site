@@ -44,7 +44,7 @@
 }
 
 .basic_input {
-  @apply flex-1 h-10 p-1 rounded-xl border-2 border-gray-300 focus-visible:outline-gray-500 delay-150
+  @apply h-10 p-1 rounded-xl border-2 border-gray-300 duration-300
 }
 
 .basic_button {
