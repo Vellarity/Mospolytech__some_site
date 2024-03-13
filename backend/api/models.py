@@ -4,6 +4,9 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from simple_history.models import HistoricalRecords
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User as AuthUser
 
 # Create your models here.
 class Profile(models.Model):
@@ -20,6 +23,14 @@ class Profile(models.Model):
     geo = models.TextField(blank=True)
     history = HistoricalRecords()
 
+@receiver(post_save, sender=AuthUser)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=AuthUser)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
 
 class Wear(models.Model):
 

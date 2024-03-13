@@ -6,15 +6,15 @@ export const useItemStore = defineStore('item', {
     state: () => {
         return {
             info:{
-                name:String,
-                size:Array,
-                color:String,
-                cost:Number,
-                type:String,
-                image:String,
-                infoText:String,
+                name:"",
+                size:[],
+                color:"",
+                cost:0,
+                type:"",
+                image:"",
+                infoText:"",
             },
-            comments:Array
+            comments:[]
         }
     },
     actions: {

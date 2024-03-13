@@ -67,3 +67,8 @@
     background: url(./assets/search-outline.svg);
     background-repeat: no-repeat;
 }
+
+.icon-square-pen {
+    background: url(./assets/square_pen.svg);
+    background-repeat: no-repeat;
+}

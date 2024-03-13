@@ -1,72 +1,16 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from api.models import Wear, WearComment, WearType
-from api.serializers import WearCommentSerializer, WearSerializer
+from api.serializers import UserProfileSerializer, WearCommentSerializer, WearSerializer
 from django.db.models import Q, Min, Max
+from django.contrib.auth.models import User as AuthUser
 
 from rest_framework.decorators import action
 from api.helper import CustomPagination
 from rest_framework import viewsets
 from rest_framework.response import Response
-
-#!!! SOF CSRF THEME
-
-import json
-from django.contrib.auth import authenticate, login, logout
-from django.middleware.csrf import get_token
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.decorators.http import require_POST
-
-def get_csrf(request):
-    response = JsonResponse({'detail': 'CSRF cookie set'})
-    response['Access-Control-Expose-Headers'] = "X-CSRFToken"
-    response['X-CSRFToken'] = get_token(request)
-    return response
-
-@require_POST
-def login_view(request):
-    data = json.loads(request.body)
-    username = data.get('username')
-    password = data.get('password')
-
-    if username is None or password is None:
-        return JsonResponse({'detail': 'Please provide username and password.'}, status=400)
-
-    user = authenticate(username=username, password=password)
-
-    if user is None:
-        return JsonResponse({'detail': 'Invalid credentials.'}, status=400)
-
-    login(request, user)
-    return JsonResponse({'detail': 'Successfully logged in.'})
-
-def logout_view(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({'detail': 'You\'re not logged in.'}, status=400)
-
-    logout(request)
-    return JsonResponse({'detail': 'Successfully logged out.'})
-
-
-@ensure_csrf_cookie
-def session_view(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({'isAuthenticated': False})
-
-    return JsonResponse({'isAuthenticated': True})
-
-
-def whoami_view(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({'isAuthenticated': False})
-
-    return JsonResponse({'username': request.user.username})
-
-
-#!!! EOF CSRF THEME
-
-# Create your views here.
-
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 
 @api_view(['GET'])
 def shop_list(request):
@@ -166,3 +110,27 @@ class WearCommentViewSet(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
+    
+class User(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request, format=None):
+        print(request)
+        user = request.user
+        response = UserProfileSerializer(user, many=False).data 
+        return Response({"response":response})
+    
+    def patch(self, request, format=None):
+        data = request.data
+        user = AuthUser.objects.get(id=data["id"])
+        user.username = data.get("username",user.username)
+        profile_data = data.get("profile", None)
+        if profile_data:
+            user.profile.fio = profile_data.get("fio",user.profile.fio)
+            user.profile.geo = profile_data.get("geo",user.profile.geo)
+            user.profile.number = profile_data.get("number",user.profile.number)
+            user.profile.email = profile_data.get("email",user.profile.email)
+        user.save()
+
+        return Response({"response": UserProfileSerializer(user, many=False).data})
+

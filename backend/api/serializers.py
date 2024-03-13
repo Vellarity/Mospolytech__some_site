@@ -1,6 +1,9 @@
+from dataclasses import fields
+from importlib.metadata import files
+from django.conf import settings
 from rest_framework import  serializers
-
-from api.models import Wear, WearComment, WearSize
+from django.contrib.auth.models import User
+from api.models import Wear, WearComment, WearSize, Profile
 
 
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
@@ -53,3 +56,24 @@ class WearCommentSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = WearComment
         fields = '__all__'
+
+class ProfileSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = Profile
+        exclude = ["user"]
+
+    def to_representation(self, instance):
+        return super().to_representation(instance) if instance else {"fio":"", "geo":"", "number":"", "email":""}
+
+class UserProfileSerializer(DynamicFieldsModelSerializer):
+    profile = ProfileSerializer(many=False)
+
+    class Meta:
+        model = User
+        fields = ["id", "username", "profile"]
+
+    def to_representation(self, instance):
+        repr = super().to_representation(instance)
+        if not repr["profile"]:
+            repr["profile"] = {"fio":"", "geo":"", "number":"", "email":""}
+        return repr
