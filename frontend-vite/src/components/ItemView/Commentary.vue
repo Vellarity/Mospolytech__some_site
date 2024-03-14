@@ -25,10 +25,6 @@ const parsedDate = computed(() => {return new Date(props.date).toLocaleDateStrin
         <div class="flex gap-1 items-center">
             <span class="font-medium text-base">Оценка:</span>
             <Rating :active="false" :initial-rating="rate"/>
-            <!-- <template v-for="i of 5">
-                <span v-if="i <= rate" class="h-4 w-3 bg-gray-800 rounded-sm" />
-                <span v-else class="h-4 w-3 bg-gray-200 border border-gray-800 rounded-sm" />
-            </template> -->
         </div>
         <div class="flex gap-1">
             <span class="font-medium text-base">Отзыв:</span>

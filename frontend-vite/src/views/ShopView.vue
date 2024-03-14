@@ -16,7 +16,7 @@ shopItemsStore.getList()
 </script>
 
 <template>
-    <div class="container grid grid-cols-shopBlock gap-4 mx-auto">
+    <div class="container grid grid-cols-shopBlock gap-4 mx-auto mb-4">
         <aside class="bg-gray-100/75 backdrop-blur-sm rounded-2xl col-start-1 p-4 gap-4 h-min  flex flex-col">
             <h2 class="font-semibold text-xl">
                 Фильтры:

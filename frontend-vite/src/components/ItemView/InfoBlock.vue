@@ -12,7 +12,7 @@ defineProps({
     <div class="grid grid-cols-4 gap-4 h-80">
 
         <div class="col-span-1 flex justify-center bg-gray-100/75 backdrop-blur-sm rounded-2xl p-4 h-80">
-            <img v-if="info?.image" class="max-w-full" :src="`${localRoute}/${info?.image}`"/>
+            <img v-if="info?.image" class="max-w-full object-contain" :src="`${localRoute}/${info?.image}`"/>
             <span v-else class="flex justify-center items-center bg-gray-100/75 backdrop-blur-sm h-full rounded-2xl">Нет изображения</span>
         </div>
 
