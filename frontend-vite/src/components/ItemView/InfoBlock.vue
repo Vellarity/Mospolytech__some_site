@@ -38,13 +38,16 @@ defineProps({
                 <span class="font-medium text-lg">Доступные размеры:</span>
             </div>
             <div class="flex gap-1">
-                <template v-for="size in info.size">
+                <template v-if="info.size?.length" v-for="size in info.size">
                     <div
                         class="h-10 w-10 rounded-lg bg-gray-200 flex justify-center items-center font-medium text-sm"
                     >
                         {{size.name}}
                     </div>
                 </template>
+                <div v-else>
+                    Нет доступных размеров
+                </div>
             </div>
         </div>
 

@@ -18,7 +18,7 @@ const parsedDate = computed(() => {return new Date(props.date).toLocaleDateStrin
     <div class="w-full p-2 border-b border-b-gray-300 flex flex-col gap-1">
         <div class="flex gap-1">
             <span class="font-medium text-base">От:</span>
-            <div v-if="user" class="font-medium text-base">{{user.username}} ({{user.fio}})</div>
+            <div v-if="user" class="font-medium text-base">{{user.username}} ({{user.fio || "Имя не указано"}})</div>
             <div v-else class="font-medium text-base">Неавторизованный пользователь ({{author ?? "Имя не указано"}})</div>
             <div class="ml-auto text-base font-medium">{{parsedDate}}</div>
         </div>

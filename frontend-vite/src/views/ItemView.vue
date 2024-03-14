@@ -14,7 +14,7 @@ itemStore.getComments(itemID)
 </script>
 
 <template>
-    <div class="container m-auto flex flex-col gap-4 mb-4">
+    <div class="container mx-auto flex flex-col gap-4 mb-4">
         <InfoBlock :info="itemStore.info"/>
         <CommentsBlock :comments="itemStore.comments"/>
     </div>

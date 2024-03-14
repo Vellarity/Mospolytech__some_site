@@ -1,3 +1,4 @@
+from weakref import ref
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -10,38 +11,8 @@ from rest_framework.decorators import action
 from api.helper import CustomPagination
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
-
-@api_view(['GET'])
-def shop_list(request):
-    try:
-        data=request.query_params
-        paginator = CustomPagination()
-
-        maxCost_Q = Q()
-        colors_Q = Q()
-        types_Q = Q()
-        if data.get("maxCost", '0') != '0':
-            maxCost_Q = Q(cost__lte=data["maxCost"])
-        if len(data.getlist("colors", [])) != 0:
-            colors_Q = Q(color__in=data.getlist("colors"))
-        if len(data.getlist("types", [])) != 0:
-            types_Q = Q(type__id__in=data.getlist("types")) 
-        res = Wear.objects.prefetch_related(
-            'size'
-        ).filter(
-            colors_Q
-            & types_Q
-            & Q(cost__gte=data.get("minCost","0")) 
-            & maxCost_Q
-            & Q(name__icontains=data.get("searchParam",""))
-        )
-
-        res = paginator.paginate_queryset(res, request)
-        res = WearSerializer(res, many=True).data
-    except Exception as e:
-        raise(e)
-    return paginator.get_paginated_response(res)
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
 
 @api_view(["GET"])
 def filters_types(request):
@@ -118,7 +89,11 @@ class WearCommentViewSet(viewsets.ModelViewSet):
         return super().create(request, *args, **kwargs)
     
 class User(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [AllowAny()]
+        else:
+            return [IsAuthenticatedOrReadOnly()]
 
     def get(self, request, format=None):
         print(request)
@@ -139,4 +114,14 @@ class User(APIView):
         user.save()
 
         return Response({"result": UserProfileSerializer(user, many=False).data})
-
+    
+    def post(self, request):
+        data = request.data
+        try:
+            user = AuthUser.objects.create_user(username=data.get("username"), email=("%s@mail.com" % data.get("username")), password=data.get("password"))
+            user.save()
+            refresh = RefreshToken.for_user(user)
+            return Response({"refresh":str(refresh), "access":str(refresh.access_token)})
+        except Exception as e:
+            print(e)
+            return Response(status=400, data="Error while creating user. Check parameters")
