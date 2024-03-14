@@ -31,6 +31,10 @@ defineProps({
                 <span>{{info.type}}</span>
             </div>
             <div class="flex gap-1 items-baseline">
+                <span class="font-medium text-lg">Цена:</span>
+                <span>{{info.cost}} ₽</span>
+            </div>
+            <div class="flex gap-1 items-baseline">
                 <span class="font-medium text-lg">Доступные размеры:</span>
             </div>
             <div class="flex gap-1">

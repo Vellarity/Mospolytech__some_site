@@ -61,6 +61,9 @@ class Wear(models.Model):
     info_text = models.TextField(null=True, blank=True)
     history = HistoricalRecords()
 
+    def __str__(self) -> str:
+        return f"{self.id} {self.name}"
+
 class WearType(models.Model):
     name = models.TextField(null=False)
 
