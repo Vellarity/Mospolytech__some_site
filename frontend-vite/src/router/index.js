@@ -28,4 +28,10 @@ const router = createRouter({
   ]
 })
 
+router.beforeEach((to, from) => {
+  if (!(localStorage.getItem("ACCESS_TOKEN") || localStorage.getItem("REFRESH_TOKEN")) && to.name == 'profile') {
+    return false
+  }
+})
+
 export default router

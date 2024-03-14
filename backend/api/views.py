@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from api.models import Wear, WearComment, WearType
-from api.serializers import UserProfileSerializer, WearCommentSerializer, WearSerializer
+from api.serializers import CreateWearCommentSerializer, UserProfileSerializer, WearCommentSerializer, WearSerializer
 from django.db.models import Q, Min, Max
 from django.contrib.auth.models import User as AuthUser
 
@@ -96,10 +96,16 @@ class WearViewSet(viewsets.ModelViewSet):
         return paginator.get_paginated_response(res)
 
 class WearCommentViewSet(viewsets.ModelViewSet):
-    serializer_class=WearCommentSerializer
+    
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return CreateWearCommentSerializer
+        if self.request.method == "GET":
+            return WearCommentSerializer
+        
 
     def get_queryset(self):
-        queryset = WearComment.objects.all()
+        queryset = WearComment.objects.all().order_by("-id")
         user_id = self.request.query_params.get("user_id")
         wear_id = self.request.query_params.get("wear_id")
         if user_id is not None:
@@ -118,7 +124,7 @@ class User(APIView):
         print(request)
         user = request.user
         response = UserProfileSerializer(user, many=False).data 
-        return Response({"response":response})
+        return Response({"result":response})
     
     def patch(self, request, format=None):
         data = request.data
@@ -132,5 +138,5 @@ class User(APIView):
             user.profile.email = profile_data.get("email",user.profile.email)
         user.save()
 
-        return Response({"response": UserProfileSerializer(user, many=False).data})
+        return Response({"result": UserProfileSerializer(user, many=False).data})
 

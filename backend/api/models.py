@@ -70,7 +70,7 @@ class WearType(models.Model):
 
 class WearComment(models.Model):
     wear = models.ForeignKey("Wear", on_delete=models.CASCADE)
-    user = models.ForeignKey("Profile", on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     author = models.TextField(blank=True, null=True)
     comment = models.TextField(blank=True)
     date = models.DateField(default=datetime.date.today())

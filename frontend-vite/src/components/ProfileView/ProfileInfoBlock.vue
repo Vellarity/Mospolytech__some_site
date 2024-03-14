@@ -7,7 +7,7 @@ user.getMe().then((res) => {
     newdata.value = res
 })
 
-let isEdit = ref(true)
+let isEdit = ref(false)
 
 let newdata = ref({
     id:user.id,
@@ -24,7 +24,7 @@ let newdata = ref({
 
 
 <template>
-    <div class="bg-gray-100 p-4 rounded-2xl flex flex-col gap-4">
+    <div class="bg-gray-100/75 backdrop-blur-sm p-4 rounded-2xl flex flex-col gap-4 h-min">
         <div class="flex justify-between items-end">
             <h2 class="font-semibold text-2xl">Информация о пользователе</h2>
             <span @click="isEdit=!isEdit" class="icon icon-28 icon-square-pen"></span>
@@ -57,7 +57,7 @@ let newdata = ref({
                 <input v-else @input="(e) => {newdata.profile.geo = e.target.value}" name="geo" placeholder="г.Москва, ул.Пушкина, д.4" class="basic_input" :value="newdata.profile.geo">
             </div>
             <div v-if="isEdit" class="flex flex-col gap-1">
-                <button @click="() => {user.updateData(newdata)}" class="basic_button">Сохранить изменения</button>
+                <button @click="() => {user.updateData(newdata); isEdit = !isEdit}" class="basic_button">Сохранить изменения</button>
             </div>
         </div>
     </div>

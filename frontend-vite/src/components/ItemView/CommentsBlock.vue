@@ -13,7 +13,7 @@ defineProps({
         <div class="bg-gray-100/75 backdrop-blur-sm col-span-3 rounded-2xl p-4">
             <h2 class="font-semibold text-xl">Комментарии:</h2>
             <div class="flex flex-col flex-1">
-                <Commentary v-for="comment of comments" v-bind="comment"/>
+                <Commentary v-for="comment of comments" :key="comment.id" v-bind="comment"/>
             </div>
         </div>
 

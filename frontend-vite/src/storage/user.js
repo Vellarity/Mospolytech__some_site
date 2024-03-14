@@ -11,7 +11,8 @@ export const useUserStore = defineStore('user', {
                 number:"",
                 email:"",
                 geo:"",
-            }
+            },
+            comments:[]
         }
     },
 
@@ -28,7 +29,7 @@ export const useUserStore = defineStore('user', {
                     return
                 let res = await req.json()
 
-                this.$patch(res.response)
+                this.$patch(res.result)
 /* 
                 this.id = res.response.id
                 this.username = res.response.username
@@ -38,22 +39,23 @@ export const useUserStore = defineStore('user', {
                 this.profile.number = res.response.profile.number
                 this.profile.email = res.response.profile.email
                 this.profile.geo = res.response.profile.geo */
-                return res.response
+                return res.result
             } catch (error) {
                 console.error(error)
             }
         },
-        async getComments(){
+        async getComments(userID){
             let access = localStorage.getItem("ACCESS_TOKEN")
+            let urlParams = new URLSearchParams({"user_id":userID})
             try {
-                let req = await fetch(`${localRoute}api/comments`,{
+                let req = await fetch(`${localRoute}api/comments?${urlParams}`,{
                     headers:{
                         "Authorization":`Bearer ${access}`
                     }
                 })
                 if (!req.ok) return
                 let res = await req.json()
-                console.log(res)
+                this.comments = res.results
             } catch (error) {
                 console.error(error)
             }

@@ -50,9 +50,32 @@ class WearSerializer(DynamicFieldsModelSerializer):
     def get_image_url(obj):
         return obj.image.url if obj.image else None 
 
+class CommentUserSerializer(DynamicFieldsModelSerializer):
+    fio = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ["id", "username", "fio"]
+
+    @staticmethod
+    def get_fio(obj):
+        return obj.profile.fio
+
+class CommentWearSerializer(DynamicFieldsModelSerializer):
+    class Meta:
+        model = Wear
+        fields = ["id","name"]
+
 class WearCommentSerializer(DynamicFieldsModelSerializer):
     #wear = serializers.SlugRelatedField("id", read_only=True)
+    user = CommentUserSerializer(many=False)
+    wear = CommentWearSerializer(many=False)
 
+    class Meta:
+        model = WearComment
+        fields = '__all__'
+
+class CreateWearCommentSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = WearComment
         fields = '__all__'

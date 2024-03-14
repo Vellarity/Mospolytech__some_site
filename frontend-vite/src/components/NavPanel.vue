@@ -1,11 +1,19 @@
 <script setup>
-    import { ref } from 'vue'
-    import {RouterLink} from "vue-router"
+import { ref } from 'vue'
+import {RouterLink, useRouter} from "vue-router"
 
-    import { useSessionStore } from '../storage/session';
+import { useSessionStore } from '../storage/session';
 
-    let isMenuOpened = ref(false);
-    const sessionStore = useSessionStore()
+let isMenuOpened = ref(false);
+const sessionStore = useSessionStore()
+const router = useRouter()
+
+function logout() {
+    sessionStore.isAuthenticated = false,
+    localStorage.clear()
+    isMenuOpened.value = !isMenuOpened.value
+    router.push("/")
+}
 
 </script>
 
@@ -23,8 +31,11 @@
                 </div>
                 
                 <div class="rounded-lg hover:bg-gray-300 cursor-pointer p-2 flex justify-end items-center gap-1">
-                    <span class="icon icon-28 icon-profile"></span>
                     <router-link @click="isMenuOpened = !isMenuOpened" class="text-right text-lg font-medium" to="/">Магазин</router-link>
+                </div>
+
+                <div v-if="sessionStore.isAuthenticated" class="rounded-lg hover:bg-gray-300 cursor-pointer p-2 flex justify-end items-center gap-1">
+                    <div @click="logout()" class="text-right text-lg font-medium">Выйти</div>
                 </div>
             </div>
         </div>
