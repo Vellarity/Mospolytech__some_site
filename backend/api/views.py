@@ -69,7 +69,7 @@ class WearViewSet(viewsets.ModelViewSet):
 class WearCommentViewSet(viewsets.ModelViewSet):
     
     def get_serializer_class(self):
-        if self.request.method == "POST":
+        if self.request.method in ["POST", "PUT", "PATCH"]:
             return CreateWearCommentSerializer
         if self.request.method == "GET":
             return WearCommentSerializer
@@ -87,6 +87,9 @@ class WearCommentViewSet(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
     
 class User(APIView):
     def get_permissions(self):

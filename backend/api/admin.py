@@ -5,21 +5,33 @@ from django.urls import reverse
 
 from api import models
 
+class WearForTypeInline(admin.TabularInline):
+    model = models.Wear
+    readonly_fields=["id", "size"]
+
 @admin.register(models.Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = [field.name for field in models.Profile._meta.get_fields() if not (field.many_to_many or field.one_to_many or field.many_to_one or field.name=="user")].__add__(["user_link"])
+    raw_id_fields = ["user"]
 
+    @admin.display(
+        boolean=False,
+        ordering="-user",
+        description="User",
+    )
     def user_link(self, obj):
         url = (
             reverse("admin:auth_user_change", args=(obj.user.id,))
         )
-        return format_html('<a href="{}">{}</a>', url, obj.user.id)
+        return format_html('<a href="{}">{} ({})</a>', url, obj.user.id, obj.user.username)
     pass
 
 @admin.register(models.Wear)
 class WearAdmin(ExportActionModelAdmin):
     list_display = [field.name for field in models.Wear._meta.get_fields() if not (field.many_to_many or field.one_to_many or field.many_to_one)].__add__(["type_link","wear_sizes"])
+    list_display_links = ["id","name"]
     search_fields = ["id", "name"]
+    filter_horizontal=["size"]
     list_filter = ["name", "cost", "color", ("size", admin.RelatedFieldListFilter)]
 
     def wear_sizes(self, obj):
@@ -45,6 +57,7 @@ class WearCommentAdmin(ExportActionModelAdmin):
     list_display = [field.name for field in models.WearComment._meta.get_fields() if not (field.many_to_many or field.one_to_many or field.many_to_one)].__add__(["wear_obj"])
     search_fields = ["author", "rate", "wear__id"]
     list_filter = ["rate"]
+    date_hierarchy = "date"
 
     def wear_obj(self,obj):
         from django.utils.html import format_html
@@ -60,8 +73,8 @@ class WearCommentAdmin(ExportActionModelAdmin):
 
 @admin.register(models.WearType)
 class WearTypeAdmin(admin.ModelAdmin):
-    pass
+    inlines = [WearForTypeInline]
 
 @admin.register(models.WearSize)
-class WearSizeAdmin(admin.ModelAdmin):
+class WearSizeAdmin(admin.ModelAdmin): 
     pass

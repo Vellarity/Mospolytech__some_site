@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, toValue } from 'vue';
+import { onMounted, ref, toValue, watch } from 'vue';
 
 const props = defineProps({
     active:Boolean,
@@ -16,6 +16,10 @@ const noactiveClass = 'h-4 w-3 bg-gray-200 border border-gray-800 rounded-sm'
 function changeRating(newRating) {
     if (props.active) rating.value = newRating
 }
+
+watch(() => props.initialRating, () => {
+    if (props.active) rating.value = props.initialRating
+})
 
 </script>
 

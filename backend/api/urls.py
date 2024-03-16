@@ -17,7 +17,8 @@ wear = views.WearViewSet.as_view({
 
 comments = views.WearCommentViewSet.as_view({
     'get':'list',
-    'post':'create'
+    'post':'create',
+    'patch':'update'
 })
 
 
